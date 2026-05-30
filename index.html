@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeowner Renovation Experience Survey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand: #1a6b4a;
+    --brand-light: #e8f5ee;
+    --brand-dark: #124d36;
+    --accent: #f59e0b;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f8faf9;
+    --white: #ffffff;
+    --error: #ef4444;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), #2ea07a);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 60%, #2ea07a 100%);
+    color: var(--white);
+    padding: 56px 24px 48px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.95);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+  .hero p {
+    font-size: 16px;
+    opacity: 0.88;
+    max-width: 560px;
+    margin: 0 auto 24px;
+    line-height: 1.65;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    font-size: 13px;
+    opacity: 0.8;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* Layout */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 36px 0 8px;
+    margin-bottom: 4px;
+  }
+  .section-num {
+    width: 32px;
+    height: 32px;
+    background: var(--brand);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand-dark);
+  }
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-light), transparent);
+    border-radius: 1px;
+    margin-bottom: 20px;
+  }
+
+  /* Question cards */
+  .q-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.2s;
+  }
+  .q-card:focus-within { border-color: var(--brand); }
+  .q-card.error { border-color: var(--error); }
+
+  .q-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .q-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 6px;
+  }
+  .q-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .q-sublabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin: 14px 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Radio & Checkbox options */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .option:hover { border-color: var(--brand); background: var(--brand-light); }
+  .option input[type="radio"],
+  .option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--brand);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .option input[type="radio"]:checked + span,
+  .option input[type="checkbox"]:checked + span {
+    color: var(--brand-dark);
+    font-weight: 500;
+  }
+  .option:has(input:checked) {
+    border-color: var(--brand);
+    background: var(--brand-light);
+  }
+  .option span { font-size: 14px; line-height: 1.4; }
+
+  /* "Other" text input */
+  .other-input {
+    display: none;
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .other-input:focus { border-color: var(--brand); }
+  .other-input.visible { display: block; }
+
+  /* Scale (1-10) */
+  .scale-wrap {
+    margin-top: 4px;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  .scale-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .scale-btn {
+    flex: 1;
+    min-width: 36px;
+    aspect-ratio: 1;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .scale-btn:hover { border-color: var(--brand); background: var(--brand-light); color: var(--brand-dark); }
+  .scale-btn.active { background: var(--brand); border-color: var(--brand); color: var(--white); }
+
+  /* Two-part question */
+  .two-part { border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px; }
+
+  /* Textarea */
+  .q-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s;
+    line-height: 1.55;
+  }
+  .q-textarea:focus { border-color: var(--brand); }
+  .q-textarea::placeholder { color: #9ca3af; }
+
+  /* ── DRAG & DROP RANKING (Q27) ── */
+  .rank-instructions {
+    background: var(--brand-light);
+    border: 1px solid rgba(26,107,74,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--brand-dark);
+    margin-bottom: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .rank-instructions svg { flex-shrink: 0; margin-top: 1px; }
+
+  .rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: grab;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .rank-item:hover { border-color: var(--brand); box-shadow: var(--shadow-md); }
+  .rank-item.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+  .rank-item.drag-over {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    box-shadow: 0 0 0 3px rgba(26,107,74,0.12);
+  }
+  .rank-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .rank-item:nth-child(1) .rank-badge { background: #f59e0b; }
+  .rank-item:nth-child(2) .rank-badge { background: #94a3b8; }
+  .rank-item:nth-child(3) .rank-badge { background: #b45309; }
+
+  .drag-handle {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 2px;
+    opacity: 0.35;
+    flex-shrink: 0;
+  }
+  .drag-handle span {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 1px;
+  }
+  .rank-item-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .rank-item-text strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1px;
+  }
+  .rank-item-text em {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: normal;
+  }
+
+  /* Touch support hint */
+  .touch-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 10px;
+    display: none;
+  }
+  @media (pointer: coarse) { .touch-hint { display: block; } }
+
+  /* Checkbox limit badge */
+  .limit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--brand-light);
+    border: 1px solid rgba(26,107,74,0.25);
+    color: var(--brand-dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .limit-count { font-weight: 700; font-size: 14px; }
+
+  .option.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .option:has(input[type=checkbox]:checked).disabled {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Submit */
+  .submit-wrap {
+    padding: 40px 0 64px;
+    text-align: center;
+  }
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--brand);
+    color: var(--white);
+    border: none;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(26,107,74,0.35);
+  }
+  .submit-btn:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,107,74,0.4); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-note { font-size: 13px; color: var(--text-muted); margin-top: 12px; }
+
+  /* Thank you screen */
+  #thank-you {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    color: var(--white);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    flex-direction: column;
+  }
+  #thank-you.visible { display: flex; }
+  .ty-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 36px;
+  }
+  #thank-you h2 { font-size: 32px; font-weight: 700; margin-bottom: 14px; }
+  #thank-you p { font-size: 16px; opacity: 0.88; max-width: 460px; line-height: 1.65; }
+
+  /* Error message */
+  .error-msg {
+    display: none;
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .q-card.error .error-msg { display: block; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    .q-card { padding: 18px 16px; }
+    .scale-btn { min-width: 30px; font-size: 13px; }
+    .hero { padding: 40px 16px 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar-wrap" id="progress-bar-wrap" style="display:none">
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <span class="progress-label" id="progress-label">0%</span>
+</div>
+
+<!-- Hero -->
+<div class="hero" id="hero">
+  <div class="hero-badge">Research Survey</div>
+  <h1>Homeowner Renovation<br>Experience</h1>
+  <p>Help us understand the real challenges homeowners face when managing renovations — so we can build better tools to support you.</p>
+  <div class="hero-meta">
+    <span>⏱ 8–10 minutes</span>
+    <span>🔒 Anonymous &amp; confidential</span>
+    <span>35 questions</span>
+  </div>
+</div>
+
+<!-- Survey form -->
+<form id="survey-form" novalidate>
+<div class="container">
+
+  <!-- SECTION 1 -->
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>About You</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-num">Q1</div>
+    <div class="q-label">What is your age range?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q1" value="Under 30"><span>Under 30</span></label>
+      <label class="option"><input type="radio" name="q1" value="30-39"><span>30 – 39</span></label>
+      <label class="option"><input type="radio" name="q1" value="40-49"><span>40 – 49</span></label>
+      <label class="option"><input type="radio" name="q1" value="50-59"><span>50 – 59</span></label>
+      <label class="option"><input type="radio" name="q1" value="60+"><span>60+</span></label>
+      <label class="option"><input type="radio" name="q1" value="Prefer not to say"><span>Prefer not to say</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-num">Q2</div>
+    <div class="q-label">What best describes where you live?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q2" value="Urban"><span>Urban (city centre / condo / townhouse)</span></label>
+      <label class="option"><input type="radio" name="q2" value="Suburban"><span>Suburban (detached home, outside city core)</span></label>
+      <label class="option"><input type="radio" name="q2" value="Rural"><span>Rural / small town</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-num">Q3</div>
+    <div class="q-label">How long have you owned your current home?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q3" value="Less than 2 years"><span>Less than 2 years</span></label>
+      <label class="option"><input type="radio" name="q3" value="2-5 years"><span>2 – 5 years</span></label>
+      <label class="option"><input type="radio" name="q3" value="5-10 years"><span>5 – 10 years</span></label>
+      <label class="option"><input type="radio" name="q3" value="More than 10 years"><span>More than 10 years</span></label>
+      <label class="option"><input type="radio" name="q3" value="Renting"><span>I'm renting / don't own</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-num">Q4</div>
+    <div class="q-label">What is your approximate household income?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q4" value="Under $75K"><span>Under $75,000</span></label>
+      <label class="option"><input type="radio" name="q4" value="$75K-$125K"><span>$75,000 – $125,000</span></label>
+      <label class="option"><input type="radio" name="q4" value="$125K-$200K"><span>$125,000 – $200,000</span></label>
+      <label class="option"><input type="radio" name="q4" value="$200K-$350K"><span>$200,000 – $350,000</span></label>
+      <label class="option"><input type="radio" name="q4" value="$350K+"><span>$350,000+</span></label>
+      <label class="option"><input type="radio" name="q4" value="Prefer not to say"><span>Prefer not to say</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-num">Q5</div>
+    <div class="q-label">Do you have children living at home?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q5" value="Yes"><span>Yes</span></label>
+      <label class="option"><input type="radio" name="q5" value="No"><span>No</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-num">Q6</div>
+    <div class="q-label">What is your employment situation?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q6" value="Full-time employed"><span>Full-time employed</span></label>
+      <label class="option"><input type="radio" name="q6" value="Self-employed"><span>Self-employed / business owner</span></label>
+      <label class="option"><input type="radio" name="q6" value="Part-time employed"><span>Part-time employed</span></label>
+      <label class="option"><input type="radio" name="q6" value="Not currently working"><span>Not currently working</span></label>
+      <label class="option"><input type="radio" name="q6" value="Retired"><span>Retired</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>About Your Renovation</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-num">Q7</div>
+    <div class="q-label">What type of renovations have you done or are currently planning?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q7" value="Kitchen"><span>Kitchen</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Bathroom(s)"><span>Bathroom(s)</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Basement"><span>Basement</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Flooring/painting"><span>Flooring / painting</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Addition or structural change"><span>Addition or structural change</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Full home renovation"><span>Full home renovation</span></label>
+      <label class="option"><input type="checkbox" name="q7" value="Haven't renovated yet but planning to"><span>I haven't renovated yet but am planning to</span></label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-num">Q8</div>
+    <div class="q-label">What was (or is) your renovation budget?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q8" value="Under $25K"><span>Under $25,000</span></label>
+      <label class="option"><input type="radio" name="q8" value="$25K-$75K"><span>$25,000 – $75,000</span></label>
+      <label class="option"><input type="radio" name="q8" value="$75K-$150K"><span>$75,000 – $150,000</span></label>
+      <label class="option"><input type="radio" name="q8" value="$150K-$300K"><span>$150,000 – $300,000</span></label>
+      <label class="option"><input type="radio" name="q8" value="$300K+"><span>$300,000+</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-num">Q9</div>
+    <div class="q-label">How did you manage or plan to manage the renovation?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q9" value="GC handled everything"><span>A general contractor handled everything</span></label>
+      <label class="option"><input type="radio" name="q9" value="Self-managed"><span>I acted as my own project manager</span></label>
+      <label class="option"><input type="radio" name="q9" value="Mixed GC and self"><span>A mix — GC for some things, self-managed for others</span></label>
+      <label class="option"><input type="radio" name="q9" value="Separate PM or designer"><span>I hired a separate project manager or designer</span></label>
+      <label class="option"><input type="radio" name="q9" value="Haven't started yet"><span>Haven't started yet</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-num">Q10</div>
+    <div class="q-label">Approximately how many hours per week did you spend managing your renovation?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q10" value="Less than 2 hours"><span>Less than 2 hours</span></label>
+      <label class="option"><input type="radio" name="q10" value="2-5 hours"><span>2 – 5 hours</span></label>
+      <label class="option"><input type="radio" name="q10" value="5-10 hours"><span>5 – 10 hours</span></label>
+      <label class="option"><input type="radio" name="q10" value="More than 10 hours"><span>More than 10 hours</span></label>
+      <label class="option"><input type="radio" name="q10" value="Not applicable"><span>Not applicable / haven't started</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Pain Points</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="q11">
+    <div class="q-num">Q11</div>
+    <div class="q-label">What were your biggest frustrations managing the renovation?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q11" value="Tracking spending vs budget"><span>Tracking actual spending versus the budget</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Not knowing decision deadlines"><span>Not knowing when I needed to make decisions (e.g. tile, fixtures)</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Scope changes not tracked"><span>Scope changes weren't tracked or communicated clearly</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Hard to visualize finishes"><span>Hard to visualize what finishes / layouts would actually look like</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Getting clear quotes"><span>Getting clear, accurate quotes from contractors</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Not knowing what things cost"><span>Not knowing what things should cost</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Finding contractors"><span>Finding and vetting reliable contractors</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Coordinating trades"><span>Coordinating multiple trades at once</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Communication breakdowns"><span>Communication breakdowns with my contractor</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="No central organization"><span>No single place to keep everything organized</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Managing permits"><span>Managing permits and inspections</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Payment timing"><span>Not knowing when / how much to pay contractors</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Material delays/wrong items"><span>Materials arriving late or being wrong</span></label>
+      <label class="option"><input type="checkbox" name="q11" value="Deficiencies after completion"><span>Dealing with deficiencies or unfinished work after completion</span></label>
+      <label class="option" id="q11-other-label">
+        <input type="checkbox" name="q11" value="Other" id="q11-other-cb">
+        <span>Other: <input type="text" class="other-input" id="q11-other-text" placeholder="Please describe…"></span>
+      </label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="q12">
+    <div class="q-num">Q12</div>
+    <div class="q-label">How were scope changes typically communicated with your contractor?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q12" value="Text/WhatsApp"><span>Text messages / WhatsApp</span></label>
+      <label class="option"><input type="checkbox" name="q12" value="Phone calls"><span>Phone calls</span></label>
+      <label class="option"><input type="checkbox" name="q12" value="Email"><span>Email</span></label>
+      <label class="option"><input type="checkbox" name="q12" value="In person - nothing written"><span>In person — nothing written down</span></label>
+      <label class="option"><input type="checkbox" name="q12" value="Formal written change orders"><span>Formal written change orders</span></label>
+      <label class="option"><input type="checkbox" name="q12" value="Didn't track changes"><span>We didn't really track changes</span></label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="q13">
+    <div class="q-num">Q13</div>
+    <div class="q-label">How often were you caught off guard by a decision deadline — e.g. needing to pick a fixture or finish before you felt ready?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q13" value="Never"><span>Never — I always felt prepared</span></label>
+      <label class="option"><input type="radio" name="q13" value="Once or twice"><span>Once or twice — manageable</span></label>
+      <label class="option"><input type="radio" name="q13" value="Several times"><span>Several times — it caused delays or stress</span></label>
+      <label class="option"><input type="radio" name="q13" value="Constantly"><span>Constantly — it was one of the hardest parts</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="q14">
+    <div class="q-num">Q14</div>
+    <div class="q-label">On a scale of 1–10, how stressful was managing your renovation overall?</div>
+    <div class="scale-wrap">
+      <div class="scale-labels">
+        <span>1 = Completely stress-free</span>
+        <span>10 = One of the most stressful experiences of my life</span>
+      </div>
+      <div class="scale-btns" id="scale-q14">
+        <button type="button" class="scale-btn" data-q="q14" data-v="1">1</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="2">2</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="3">3</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="4">4</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="5">5</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="6">6</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="7">7</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="8">8</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="9">9</button>
+        <button type="button" class="scale-btn" data-q="q14" data-v="10">10</button>
+      </div>
+      <input type="hidden" name="q14" id="q14-val">
+    </div>
+    <div class="error-msg">Please select a value.</div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Project Management &amp; Visibility</h2>
+  </div>
+  <div class="section-divider"></div>
+  <div class="q-card" style="background:var(--brand-light); border-color:rgba(26,107,74,0.2)">
+    <p style="font-size:14px; color:var(--brand-dark); line-height:1.65;">Renovations involve a lot of moving parts — some handled by you, some by your contractor or a designer. For each area below, tell us <strong>who was responsible</strong> and <strong>how it went</strong>.</p>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="q15">
+    <div class="q-num">Q15</div>
+    <div class="q-label">Trade scheduling and sequencing</div>
+    <div class="q-hint">e.g. making sure the electrician comes before the drywaller, plumber before the tiler</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q15a" value="GC handled - not involved"><span>My GC or PM handled it — I wasn't involved</span></label>
+      <label class="option"><input type="radio" name="q15a" value="GC handled - some visibility"><span>My GC handled it, but I had a little visibility into the schedule</span></label>
+      <label class="option"><input type="radio" name="q15a" value="Self-managed"><span>I managed this myself</span></label>
+      <label class="option"><input type="radio" name="q15a" value="Shared with GC"><span>It was shared between me and my GC</span></label>
+      <label class="option"><input type="radio" name="q15a" value="N/A"><span>Not applicable to my project</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q15b" value="Smooth"><span>Smooth — no issues</span></label>
+        <label class="option"><input type="radio" name="q15b" value="Some delays"><span>Some delays or sequencing problems</span></label>
+        <label class="option"><input type="radio" name="q15b" value="Significant delays"><span>Significant delays that affected the project timeline</span></label>
+        <label class="option"><input type="radio" name="q15b" value="Problem after the fact"><span>I only realized there was a problem after it caused an issue</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" id="q16">
+    <div class="q-num">Q16</div>
+    <div class="q-label">Contractor communication — fielding questions, decisions, and updates from trades day-to-day</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q16a" value="GC single point of contact"><span>My GC was the single point of contact — trades came to them, not me</span></label>
+      <label class="option"><input type="radio" name="q16a" value="GC managed but trades contacted me"><span>My GC managed it but I was still getting contacted by trades directly</span></label>
+      <label class="option"><input type="radio" name="q16a" value="Self-managed"><span>I handled all communication myself</span></label>
+      <label class="option"><input type="radio" name="q16a" value="N/A"><span>Not applicable</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q16b" value="Easy - well organized"><span>Easy — well organized</span></label>
+        <label class="option"><input type="radio" name="q16b" value="Manageable but time-consuming"><span>Manageable but time-consuming</span></label>
+        <label class="option"><input type="radio" name="q16b" value="Overwhelming"><span>Overwhelming — felt like a part-time job</span></label>
+        <label class="option"><input type="radio" name="q16b" value="Things fell through the cracks"><span>Things fell through the cracks</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="q17">
+    <div class="q-num">Q17</div>
+    <div class="q-label">Quality control — inspecting work at key milestones before the next trade begins</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q17a" value="GC did walkthroughs - not expected to inspect"><span>My GC or PM did site walkthroughs — I wasn't expected to inspect</span></label>
+      <label class="option"><input type="radio" name="q17a" value="GC did walkthroughs - unsure what was checked"><span>My GC did walkthroughs but I wasn't sure what had been checked</span></label>
+      <label class="option"><input type="radio" name="q17a" value="I did my own inspections"><span>I did my own inspections</span></label>
+      <label class="option"><input type="radio" name="q17a" value="Nobody inspected formally"><span>Nobody formally inspected — we just moved forward</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q17b" value="Issues caught early"><span>Issues were caught early</span></label>
+        <label class="option"><input type="radio" name="q17b" value="Some issues discovered late"><span>Some issues discovered late that were harder to fix</span></label>
+        <label class="option"><input type="radio" name="q17b" value="Missed things noticed after completion"><span>I missed things I only noticed after completion</span></label>
+        <label class="option"><input type="radio" name="q17b" value="Didn't know inspections were important"><span>I didn't know milestone inspections were important</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="q18">
+    <div class="q-num">Q18</div>
+    <div class="q-label">Permits and inspections — pulling permits, booking municipal inspections, understanding what required one</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q18a" value="GC handled - full confidence"><span>My GC handled everything — I had full confidence in the process</span></label>
+      <label class="option"><input type="radio" name="q18a" value="GC handled - no visibility"><span>My GC handled it but I had no visibility into what was pulled or when</span></label>
+      <label class="option"><input type="radio" name="q18a" value="I handled permits myself"><span>I handled permits myself</span></label>
+      <label class="option"><input type="radio" name="q18a" value="Didn't pull required permits"><span>We didn't pull permits we probably should have</span></label>
+      <label class="option"><input type="radio" name="q18a" value="N/A"><span>Not applicable — my project didn't require permits</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How satisfied were you with how this was managed?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q18b" value="Very satisfied"><span>Very satisfied</span></label>
+        <label class="option"><input type="radio" name="q18b" value="Somewhat satisfied - wanted more transparency"><span>Somewhat satisfied — I would have liked more transparency</span></label>
+        <label class="option"><input type="radio" name="q18b" value="Unsatisfied - didn't know what was happening"><span>Unsatisfied — I didn't know what was happening</span></label>
+        <label class="option"><input type="radio" name="q18b" value="It caused problems"><span>It caused problems</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card" id="q19">
+    <div class="q-num">Q19</div>
+    <div class="q-label">Contractor payments — knowing when to pay, how much to hold back, and understanding lien risk</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q19a" value="Paid when asked - trusted process"><span>I paid invoices when my GC asked — I trusted the process</span></label>
+      <label class="option"><input type="radio" name="q19a" value="Paid when asked - not confident"><span>I paid when asked but wasn't confident I was doing it right</span></label>
+      <label class="option"><input type="radio" name="q19a" value="Researched holdbacks myself"><span>I researched holdbacks and managed payments carefully myself</span></label>
+      <label class="option"><input type="radio" name="q19a" value="Lawyer or advisor helped"><span>I had a lawyer or advisor help with payment structure</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q19b" value="No issues"><span>No issues</span></label>
+        <label class="option"><input type="radio" name="q19b" value="Overpaid - chased work"><span>I overpaid and had to chase work to be completed</span></label>
+        <label class="option"><input type="radio" name="q19b" value="Didn't know about holdbacks"><span>I wasn't aware holdbacks or lien waivers were a thing until too late</span></label>
+        <label class="option"><input type="radio" name="q19b" value="Payment dispute"><span>I had a payment dispute with my contractor</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card" id="q20">
+    <div class="q-num">Q20</div>
+    <div class="q-label">Materials sourcing and procurement — ordering finishes, fixtures, or materials; tracking lead times</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q20a" value="GC or designer handled all procurement"><span>My GC or designer handled all procurement</span></label>
+      <label class="option"><input type="radio" name="q20a" value="GC handled but I chased timelines"><span>My GC handled procurement but I had to chase delivery timelines</span></label>
+      <label class="option"><input type="radio" name="q20a" value="I sourced everything myself"><span>I sourced and ordered everything myself</span></label>
+      <label class="option"><input type="radio" name="q20a" value="Split between GC and me"><span>It was split — GC handled some, I handled others</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q20b" value="Smooth - on time"><span>Smooth — everything arrived on time</span></label>
+        <label class="option"><input type="radio" name="q20b" value="Some delays but manageable"><span>Some delays but manageable</span></label>
+        <label class="option"><input type="radio" name="q20b" value="Late or wrong deliveries caused delays"><span>Late or wrong deliveries caused real project delays</span></label>
+        <label class="option"><input type="radio" name="q20b" value="Didn't realize long lead times"><span>I didn't realize I needed to order things so far in advance</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="q-card" id="q21">
+    <div class="q-num">Q21</div>
+    <div class="q-label">Deficiencies and follow-up — tracking incomplete or unsatisfactory work after the project was "done"</div>
+    <div class="q-sublabel">Who handled this?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q21a" value="GC formal deficiency walkthrough"><span>My GC did a formal deficiency walkthrough with me</span></label>
+      <label class="option"><input type="radio" name="q21a" value="Flagged informally - no structured process"><span>I flagged issues informally but there was no structured process</span></label>
+      <label class="option"><input type="radio" name="q21a" value="GC was gone - hard to get back"><span>I noticed problems after my GC was gone and it was hard to get them back</span></label>
+      <label class="option"><input type="radio" name="q21a" value="No deficiencies"><span>Everything was completed to my satisfaction — no deficiencies</span></label>
+    </div>
+    <div class="two-part">
+      <div class="q-sublabel">How did it go?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="q21b" value="Resolved quickly and professionally"><span>Resolved quickly and professionally</span></label>
+        <label class="option"><input type="radio" name="q21b" value="Took longer but eventually resolved"><span>Took longer than expected but eventually resolved</span></label>
+        <label class="option"><input type="radio" name="q21b" value="Some items never resolved"><span>Some items were never resolved</span></label>
+        <label class="option"><input type="radio" name="q21b" value="Didn't know about deficiency walkthrough"><span>I didn't know I had the right to a deficiency walkthrough</span></label>
+      </div>
+    </div>
+    <div class="error-msg">Please answer both parts.</div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="q-card" id="q22">
+    <div class="q-num">Q22</div>
+    <div class="q-label">Regardless of who handled these tasks — how informed and in control did you feel overall during your renovation?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q22" value="Very informed"><span>Very informed — I always knew what was happening and why</span></label>
+      <label class="option"><input type="radio" name="q22" value="Somewhat informed"><span>Somewhat informed — I trusted my GC but had limited visibility</span></label>
+      <label class="option"><input type="radio" name="q22" value="Mostly in the dark"><span>Mostly in the dark — I found out about things after the fact</span></label>
+      <label class="option"><input type="radio" name="q22" value="No idea what was going on"><span>I felt like I had no idea what was going on at any given time</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="q-card" id="q23">
+    <div class="q-num">Q23</div>
+    <div class="q-label">Which areas did you most wish you had better visibility into, even if someone else was handling them?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q23" value="Project schedule and what was coming next"><span>The project schedule and what was coming next</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="What had been inspected and signed off"><span>What had been inspected and signed off</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="What permits had been pulled"><span>What permits had been pulled</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="Payments tracking against budget"><span>How payments were tracking against the budget</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="Scope changes agreed to"><span>What scope changes had been agreed to</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="Material delivery timelines"><span>Material delivery timelines</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="Outstanding deficiencies"><span>What outstanding deficiencies existed</span></label>
+      <label class="option"><input type="checkbox" name="q23" value="None - had all visibility needed"><span>None — I had all the visibility I needed</span></label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Tools &amp; Design Experience</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q24 -->
+  <div class="q-card" id="q24">
+    <div class="q-num">Q24</div>
+    <div class="q-label">What tools or methods did you use to plan and manage your renovation?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q24" value="Spreadsheets"><span>Spreadsheets (Excel / Google Sheets)</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Houzz"><span>Houzz</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Pinterest"><span>Pinterest</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Canva"><span>Canva</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="AI assistants (ChatGPT/Claude)"><span>ChatGPT or Claude (AI assistants)</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Notion/Airtable"><span>Notion, Airtable, or similar</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Paper/notebook"><span>Paper / notebook</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Nothing - kept in head"><span>Nothing — kept it in my head</span></label>
+      <label class="option"><input type="checkbox" name="q24" value="Contractor's software"><span>My contractor's software (e.g. Buildertrend, CoConstruct)</span></label>
+      <label class="option" id="q24-other-label">
+        <input type="checkbox" name="q24" value="Other" id="q24-other-cb">
+        <span>Other: <input type="text" class="other-input" id="q24-other-text" placeholder="Please describe…"></span>
+      </label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="q-card" id="q25">
+    <div class="q-num">Q25</div>
+    <div class="q-label">How satisfied were you with your design visualization process — imagining how layouts, finishes, or furniture would look in your space?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q25" value="Very satisfied"><span>Very satisfied — I could picture it clearly</span></label>
+      <label class="option"><input type="radio" name="q25" value="Somewhat satisfied"><span>Somewhat satisfied</span></label>
+      <label class="option"><input type="radio" name="q25" value="Neutral"><span>Neutral</span></label>
+      <label class="option"><input type="radio" name="q25" value="Frustrated"><span>Frustrated — it was hard to visualize</span></label>
+      <label class="option"><input type="radio" name="q25" value="Didn't try to visualize"><span>I didn't really try to visualize</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="q-card" id="q26">
+    <div class="q-num">Q26</div>
+    <div class="q-label">Have you ever used AI tools (e.g. ChatGPT, Midjourney, Claude) to visualize or plan a renovation?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q26" value="Yes - worked well"><span>Yes — and it worked well</span></label>
+      <label class="option"><input type="radio" name="q26" value="Yes - too hard to get good results"><span>Yes — but it was too hard / time-consuming to get good results</span></label>
+      <label class="option"><input type="radio" name="q26" value="No - didn't know possible"><span>No — I didn't know this was possible</span></label>
+      <label class="option"><input type="radio" name="q26" value="No - tried but couldn't get useful results"><span>No — I tried but couldn't get useful results</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Feature Priorities</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q27 — DRAG & DROP RANKING -->
+  <div class="q-card" id="q27">
+    <div class="q-num">Q27</div>
+    <div class="q-label">Rank these features from most to least valuable to you in a renovation management tool.</div>
+    <div class="rank-instructions">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Drag the cards to reorder them. <strong>#1 at the top = most valuable</strong>. The number on each card shows its current rank.</span>
+    </div>
+    <ul class="rank-list" id="rank-list">
+      <li class="rank-item" draggable="true" data-feature="AI visualization">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">1</div>
+        <div class="rank-item-text">
+          <strong>AI Visualization</strong>
+          <em>See your space with different finishes / layouts</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Budget tracker">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">2</div>
+        <div class="rank-item-text">
+          <strong>Budget Tracker</strong>
+          <em>Invoices and spending vs. original line items</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Decision timeline & reminders">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">3</div>
+        <div class="rank-item-text">
+          <strong>Decision Timeline &amp; Reminders</strong>
+          <em>Know what to decide and when</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Scope change log">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">4</div>
+        <div class="rank-item-text">
+          <strong>Scope Change Log</strong>
+          <em>Shared record of all changes with your contractor</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Quote analyzer">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">5</div>
+        <div class="rank-item-text">
+          <strong>Quote Analyzer</strong>
+          <em>Understand what things should cost</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Trade schedule">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">6</div>
+        <div class="rank-item-text">
+          <strong>Trade Schedule</strong>
+          <em>See what's happening and when, with dependencies</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Permit & inspection tracker">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">7</div>
+        <div class="rank-item-text">
+          <strong>Permit &amp; Inspection Tracker</strong>
+          <em>Know what's needed and when</em>
+        </div>
+      </li>
+      <li class="rank-item" draggable="true" data-feature="Deficiency & warranty log">
+        <div class="drag-handle"><span></span><span></span><span></span></div>
+        <div class="rank-badge">8</div>
+        <div class="rank-item-text">
+          <strong>Deficiency &amp; Warranty Log</strong>
+          <em>Track what needs to be fixed post-completion</em>
+        </div>
+      </li>
+    </ul>
+    <div class="touch-hint">📱 Tap and hold a card, then drag to reorder</div>
+    <!-- hidden inputs populated by JS -->
+    <div id="rank-hidden-inputs"></div>
+    <div class="error-msg" style="display:none" id="q27-error">Please rank all features by dragging them into order.</div>
+  </div>
+
+  <!-- Q28 — CHECKBOX MAX 3 -->
+  <div class="q-card" id="q28">
+    <div class="q-num">Q28</div>
+    <div class="q-label">Select up to 3 that you would use most during a renovation.</div>
+    <div class="limit-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Select up to <span class="limit-count" id="q28-remaining">3</span> more</span>
+    </div>
+    <div class="options" id="q28-options">
+      <label class="option"><input type="checkbox" name="q28" value="Budget / expense tracker"><span>Budget / expense tracker</span></label>
+      <label class="option"><input type="checkbox" name="q28" value="Decision timeline & reminders"><span>Decision timeline &amp; reminders</span></label>
+      <label class="option"><input type="checkbox" name="q28" value="Scope change communication log"><span>Scope change communication log</span></label>
+      <label class="option"><input type="checkbox" name="q28" value="AI design visualization"><span>AI design visualization</span></label>
+      <label class="option"><input type="checkbox" name="q28" value="Trade schedule / project timeline"><span>Trade schedule / project timeline</span></label>
+      <label class="option"><input type="checkbox" name="q28" value="Cost benchmarking / quote analysis"><span>Cost benchmarking / quote analysis</span></label>
+    </div>
+    <div class="error-msg">Please select at least one option (up to 3).</div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Adoption</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q29 -->
+  <div class="q-card" id="q29">
+    <div class="q-num">Q29</div>
+    <div class="q-label">If a tool solved most of the problems above, how much would you be willing to pay?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q29" value="Nothing"><span>Nothing — I wouldn't pay for this</span></label>
+      <label class="option"><input type="radio" name="q29" value="$5-$15/month"><span>$5 – $15 per month</span></label>
+      <label class="option"><input type="radio" name="q29" value="$15-$30/month"><span>$15 – $30 per month</span></label>
+      <label class="option"><input type="radio" name="q29" value="$30-$60/month"><span>$30 – $60 per month</span></label>
+      <label class="option"><input type="radio" name="q29" value="$60+/month"><span>$60+ per month</span></label>
+      <label class="option"><input type="radio" name="q29" value="One-time fee per project"><span>I'd prefer to pay a one-time fee per project</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q30 -->
+  <div class="q-card" id="q30">
+    <div class="q-num">Q30</div>
+    <div class="q-label">Would you want your general contractor to use the same platform — shared visibility into budget, decisions, and scope?</div>
+    <div class="options">
+      <label class="option"><input type="radio" name="q30" value="Yes - shared visibility"><span>Yes — shared visibility would reduce a lot of friction</span></label>
+      <label class="option"><input type="radio" name="q30" value="Only if contractor suggested"><span>Only if my contractor suggested it</span></label>
+      <label class="option"><input type="radio" name="q30" value="Homeowner-only tool"><span>I'd prefer a homeowner-only tool my contractor doesn't see</span></label>
+      <label class="option"><input type="radio" name="q30" value="Not sure"><span>Not sure</span></label>
+    </div>
+    <div class="error-msg">Please select an option.</div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="q-card" id="q31">
+    <div class="q-num">Q31</div>
+    <div class="q-label">How likely would you be to recommend such a tool to a friend going through a renovation?</div>
+    <div class="scale-wrap">
+      <div class="scale-labels">
+        <span>1 = Not at all likely</span>
+        <span>10 = Absolutely would recommend</span>
+      </div>
+      <div class="scale-btns" id="scale-q31">
+        <button type="button" class="scale-btn" data-q="q31" data-v="1">1</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="2">2</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="3">3</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="4">4</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="5">5</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="6">6</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="7">7</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="8">8</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="9">9</button>
+        <button type="button" class="scale-btn" data-q="q31" data-v="10">10</button>
+      </div>
+      <input type="hidden" name="q31" id="q31-val">
+    </div>
+    <div class="error-msg">Please select a value.</div>
+  </div>
+
+  <!-- Q32 -->
+  <div class="q-card" id="q32">
+    <div class="q-num">Q32</div>
+    <div class="q-label">What would stop you from adopting a new tool like this?</div>
+    <div class="q-hint">Select all that apply</div>
+    <div class="options">
+      <label class="option"><input type="checkbox" name="q32" value="Price"><span>Price</span></label>
+      <label class="option"><input type="checkbox" name="q32" value="Too much effort to set up"><span>Too much effort to set up during an already stressful time</span></label>
+      <label class="option"><input type="checkbox" name="q32" value="Contractor won't use it"><span>My contractor won't use it</span></label>
+      <label class="option"><input type="checkbox" name="q32" value="Only renovate once"><span>I'd only renovate once — not worth learning a new tool</span></label>
+      <label class="option"><input type="checkbox" name="q32" value="Privacy concerns"><span>Privacy concerns</span></label>
+      <label class="option"><input type="checkbox" name="q32" value="Won't save time"><span>I don't think it would actually save me time</span></label>
+      <label class="option" id="q32-other-label">
+        <input type="checkbox" name="q32" value="Other" id="q32-other-cb">
+        <span>Other: <input type="text" class="other-input" id="q32-other-text" placeholder="Please describe…"></span>
+      </label>
+    </div>
+    <div class="error-msg">Please select at least one option.</div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>Open Feedback</h2>
+  </div>
+  <div class="section-divider"></div>
+
+  <!-- Q33 -->
+  <div class="q-card" id="q33">
+    <div class="q-num">Q33</div>
+    <div class="q-label">What's the single biggest thing you wish you had during your renovation that didn't exist?</div>
+    <textarea class="q-textarea" name="q33" placeholder="Share your thoughts here…" rows="4"></textarea>
+  </div>
+
+  <!-- Q34 -->
+  <div class="q-card" id="q34">
+    <div class="q-num">Q34</div>
+    <div class="q-label">If you could hand off just ONE part of managing your renovation to a tool or service, what would it be?</div>
+    <textarea class="q-textarea" name="q34" placeholder="Share your thoughts here…" rows="4"></textarea>
+  </div>
+
+  <!-- Q35 -->
+  <div class="q-card" id="q35">
+    <div class="q-num">Q35</div>
+    <div class="q-label">Is there anything else you'd like to share about your renovation experience?</div>
+    <textarea class="q-textarea" name="q35" placeholder="Any final thoughts…" rows="4"></textarea>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-wrap">
+    <button type="submit" class="submit-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Submit Survey
+    </button>
+    <p class="submit-note">Your responses are anonymous and will be kept confidential.</p>
+  </div>
+
+</div>
+</form>
+
+<!-- Thank you screen -->
+<div id="thank-you">
+  <div class="ty-icon">🏠</div>
+  <h2>Thank you so much!</h2>
+  <p>Your responses will directly shape the tools we build for homeowners like you. We really appreciate you sharing your experience.</p>
+</div>
+
+<script>
+// ── GOOGLE SHEETS ENDPOINT ──
+// After deploying the Apps Script, paste the Web App URL here:
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyE4wefliY2eBMCewY_oTTKoVl6PqZiVAgdr6cCLnXZIbHE4aiPTjRS4Yxn-1EpDuZa/exec';
+
+// ── PROGRESS BAR ──
+const form = document.getElementById('survey-form');
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const progressWrap = document.getElementById('progress-bar-wrap');
+
+const TOTAL_Q = 35;
+const answered = new Set();
+
+function updateProgress() {
+  const pct = Math.round((answered.size / TOTAL_Q) * 100);
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = pct + '%';
+}
+
+// Show progress bar after first interaction
+form.addEventListener('change', () => { progressWrap.style.display = 'flex'; });
+
+// Track answered questions
+form.addEventListener('change', e => {
+  const el = e.target;
+  const name = el.name;
+  if (!name) return;
+  // For two-part questions, track both parts
+  const qid = name.replace(/[ab]$/, '');
+  if (el.type === 'radio' || el.type === 'checkbox') {
+    if (el.checked) answered.add(name);
+  }
+  // For scale buttons (tracked via hidden inputs)
+  updateProgress();
+});
+
+// ── SCALE BUTTONS ──
+document.querySelectorAll('.scale-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const q = btn.dataset.q;
+    document.querySelectorAll(`.scale-btn[data-q="${q}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`${q}-val`).value = btn.dataset.v;
+    answered.add(q);
+    document.getElementById(q).classList.remove('error');
+    updateProgress();
+  });
+});
+
+// ── "OTHER" TEXT INPUTS ──
+function wireOther(cbId, textId) {
+  const cb = document.getElementById(cbId);
+  const txt = document.getElementById(textId);
+  if (!cb || !txt) return;
+  cb.addEventListener('change', () => {
+    if (cb.checked) { txt.classList.add('visible'); txt.focus(); }
+    else { txt.classList.remove('visible'); txt.value = ''; }
+  });
+}
+wireOther('q11-other-cb', 'q11-other-text');
+wireOther('q24-other-cb', 'q24-other-text');
+wireOther('q32-other-cb', 'q32-other-text');
+
+// ── Q28 MAX 3 CHECKBOXES ──
+const q28Options = document.getElementById('q28-options');
+const q28Remaining = document.getElementById('q28-remaining');
+const MAX_Q28 = 3;
+
+q28Options.addEventListener('change', e => {
+  if (e.target.type !== 'checkbox') return;
+  const checked = q28Options.querySelectorAll('input[type=checkbox]:checked');
+  const remaining = MAX_Q28 - checked.length;
+  q28Remaining.textContent = Math.max(0, remaining);
+
+  // Update badge label
+  const badge = q28Remaining.closest('.limit-badge');
+  if (checked.length >= MAX_Q28) {
+    badge.style.background = 'rgba(26,107,74,0.15)';
+    q28Remaining.textContent = '0';
+  } else {
+    badge.style.background = '';
+    q28Remaining.textContent = remaining;
+  }
+
+  // Disable unchecked when at limit
+  q28Options.querySelectorAll('label.option').forEach(lbl => {
+    const inp = lbl.querySelector('input[type=checkbox]');
+    if (!inp.checked && checked.length >= MAX_Q28) {
+      lbl.classList.add('disabled');
+      inp.disabled = true;
+    } else {
+      lbl.classList.remove('disabled');
+      inp.disabled = false;
+    }
+  });
+});
+
+// ── DRAG & DROP RANKING (Q27) ──
+const rankList = document.getElementById('rank-list');
+let dragSrc = null;
+
+function updateRankBadges() {
+  rankList.querySelectorAll('.rank-item').forEach((item, i) => {
+    item.querySelector('.rank-badge').textContent = i + 1;
+  });
+  updateRankHiddenInputs();
+}
+
+function updateRankHiddenInputs() {
+  const container = document.getElementById('rank-hidden-inputs');
+  container.innerHTML = '';
+  rankList.querySelectorAll('.rank-item').forEach((item, i) => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = `q27_rank_${i + 1}`;
+    inp.value = item.dataset.feature;
+    container.appendChild(inp);
+  });
+}
+
+// Desktop drag & drop
+rankList.addEventListener('dragstart', e => {
+  dragSrc = e.target.closest('.rank-item');
+  if (!dragSrc) return;
+  dragSrc.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', '');
+});
+
+rankList.addEventListener('dragend', e => {
+  document.querySelectorAll('.rank-item').forEach(el => {
+    el.classList.remove('dragging', 'drag-over');
+  });
+  updateRankBadges();
+});
+
+rankList.addEventListener('dragover', e => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  const target = e.target.closest('.rank-item');
+  if (!target || target === dragSrc) return;
+  document.querySelectorAll('.rank-item').forEach(el => el.classList.remove('drag-over'));
+  target.classList.add('drag-over');
+
+  // Determine insert position
+  const rect = target.getBoundingClientRect();
+  const mid = rect.top + rect.height / 2;
+  if (e.clientY < mid) {
+    rankList.insertBefore(dragSrc, target);
+  } else {
+    rankList.insertBefore(dragSrc, target.nextSibling);
+  }
+});
+
+rankList.addEventListener('drop', e => {
+  e.preventDefault();
+  updateRankBadges();
+});
+
+// Touch / mobile drag support
+let touchItem = null, touchClone = null, touchOffsetY = 0;
+
+rankList.addEventListener('touchstart', e => {
+  const item = e.target.closest('.rank-item');
+  if (!item) return;
+  touchItem = item;
+  touchItem.classList.add('dragging');
+
+  const touch = e.touches[0];
+  const rect = item.getBoundingClientRect();
+  touchOffsetY = touch.clientY - rect.top;
+
+  touchClone = item.cloneNode(true);
+  touchClone.style.cssText = `
+    position: fixed; left: ${rect.left}px; top: ${rect.top}px;
+    width: ${rect.width}px; z-index: 9999; pointer-events: none;
+    opacity: 0.92; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    transform: rotate(1.5deg); transition: none;
+  `;
+  document.body.appendChild(touchClone);
+}, { passive: true });
+
+rankList.addEventListener('touchmove', e => {
+  if (!touchItem || !touchClone) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  touchClone.style.top = (touch.clientY - touchOffsetY) + 'px';
+
+  const items = [...rankList.querySelectorAll('.rank-item:not(.dragging)')];
+  let insertBefore = null;
+  for (const it of items) {
+    const rect = it.getBoundingClientRect();
+    if (touch.clientY < rect.top + rect.height / 2) { insertBefore = it; break; }
+  }
+  document.querySelectorAll('.rank-item').forEach(el => el.classList.remove('drag-over'));
+  if (insertBefore) insertBefore.classList.add('drag-over');
+
+  if (insertBefore) rankList.insertBefore(touchItem, insertBefore);
+  else rankList.appendChild(touchItem);
+}, { passive: false });
+
+rankList.addEventListener('touchend', () => {
+  if (touchClone) { touchClone.remove(); touchClone = null; }
+  if (touchItem) { touchItem.classList.remove('dragging'); touchItem = null; }
+  document.querySelectorAll('.rank-item').forEach(el => el.classList.remove('drag-over'));
+  updateRankBadges();
+});
+
+// Initialise hidden inputs
+updateRankHiddenInputs();
+
+// ── FORM VALIDATION & SUBMIT ──
+const requiredRadio = ['q1','q2','q3','q4','q5','q6','q8','q9','q10','q13','q15a','q15b','q16a','q16b','q17a','q17b','q18a','q18b','q19a','q19b','q20a','q20b','q21a','q21b','q22','q25','q26','q29','q30'];
+const requiredCheckbox = ['q7','q11','q12','q23','q24','q28','q32'];
+const requiredScale = ['q14','q31'];
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  let valid = true;
+  let firstError = null;
+
+  // Clear all errors
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('error'));
+
+  // Radio validation
+  requiredRadio.forEach(name => {
+    const checked = form.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) {
+      const qid = name.replace(/[ab]$/, '');
+      const card = document.getElementById(qid);
+      if (card) {
+        card.classList.add('error');
+        if (!firstError) firstError = card;
+      }
+      valid = false;
+    }
+  });
+
+  // Checkbox validation
+  requiredCheckbox.forEach(name => {
+    const checked = form.querySelectorAll(`input[name="${name}"]:checked`);
+    if (checked.length === 0) {
+      const card = document.getElementById(name);
+      if (card) {
+        card.classList.add('error');
+        if (!firstError) firstError = card;
+      }
+      valid = false;
+    }
+  });
+
+  // Scale validation
+  requiredScale.forEach(name => {
+    const val = document.getElementById(`${name}-val`).value;
+    if (!val) {
+      const card = document.getElementById(name);
+      if (card) {
+        card.classList.add('error');
+        if (!firstError) firstError = card;
+      }
+      valid = false;
+    }
+  });
+
+  if (!valid) {
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // ── COLLECT DATA ──
+  const data = collectFormData();
+
+  // ── SUBMIT TO GOOGLE SHEETS ──
+  const submitBtn = form.querySelector('.submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Submitting…';
+
+  const send = SCRIPT_URL
+    ? fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
+      }).catch(() => {})
+    : Promise.resolve();
+
+  send.finally(() => {
+    form.style.display = 'none';
+    document.getElementById('hero').style.display = 'none';
+    progressWrap.style.display = 'none';
+    document.getElementById('thank-you').classList.add('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+function collectFormData() {
+  const d = {};
+
+  // Unique response ID
+  d.responseId = (crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+
+  // ── Radio (single-answer) questions ──
+  ['q1','q2','q3','q4','q5','q6',
+   'q8','q9','q10','q13',
+   'q15a','q15b','q16a','q16b','q17a','q17b',
+   'q18a','q18b','q19a','q19b','q20a','q20b','q21a','q21b',
+   'q22','q25','q26','q29','q30'
+  ].forEach(name => {
+    const el = form.querySelector(`input[name="${name}"]:checked`);
+    d[name] = el ? el.value : '';
+  });
+
+  // ── Scale questions (hidden inputs) ──
+  d.q14 = document.getElementById('q14-val').value;
+  d.q31 = document.getElementById('q31-val').value;
+
+  // ── Multi-select checkbox questions ──
+  ['q7','q11','q12','q23','q24','q28','q32'].forEach(name => {
+    d[name] = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`))
+                   .map(cb => cb.value);
+  });
+
+  // ── "Other" free-text fields ──
+  ['q11','q24','q32'].forEach(q => {
+    const cb = document.getElementById(`${q}-other-cb`);
+    const txt = document.getElementById(`${q}-other-text`);
+    if (cb && cb.checked && txt && txt.value.trim()) {
+      const arr = Array.isArray(d[q]) ? d[q] : [d[q]];
+      const idx = arr.indexOf('Other');
+      if (idx !== -1) arr[idx] = 'Other: ' + txt.value.trim();
+      d[q] = arr;
+    }
+  });
+
+  // ── Q27 ranking: read DOM order → assign rank number per feature ──
+  const featureMap = {
+    'AI visualization':              'q27_ai_visualization',
+    'Budget tracker':                'q27_budget_tracker',
+    'Decision timeline & reminders': 'q27_decision_timeline',
+    'Scope change log':              'q27_scope_change_log',
+    'Quote analyzer':                'q27_quote_analyzer',
+    'Trade schedule':                'q27_trade_schedule',
+    'Permit & inspection tracker':   'q27_permit_tracker',
+    'Deficiency & warranty log':     'q27_deficiency_log'
+  };
+  document.querySelectorAll('#rank-list .rank-item').forEach((item, i) => {
+    const key = featureMap[item.dataset.feature];
+    if (key) d[key] = i + 1;
+  });
+
+  // ── Open-text questions ──
+  ['q33','q34','q35'].forEach(name => {
+    const el = form.querySelector(`[name="${name}"]`);
+    d[name] = el ? el.value.trim() : '';
+  });
+
+  return d;
+}
+
+// Remove error highlight on interaction
+form.addEventListener('change', e => {
+  const el = e.target;
+  if (!el.name) return;
+  const qid = el.name.replace(/[ab]$/, '');
+  const card = document.getElementById(qid);
+  if (card) card.classList.remove('error');
+});
+</script>
+</body>
+</html>
